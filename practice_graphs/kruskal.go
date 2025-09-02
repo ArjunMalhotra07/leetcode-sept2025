@@ -2,24 +2,29 @@ package practice_graphs
 
 import "sort"
 
+type edge struct {
+	weight, from, to int
+}
+
 func KruskalAlgorithm(graph [][]int, n int) int {
 	uf := NewunionBySize(n)
-	edges := [][]int{}
+	edges := []edge{}
 	for i := 0; i < len(graph); i++ {
 		for j := 0; j < len(graph[i]); j++ {
 			edgeWeight := graph[i][j]
 			if edgeWeight != 0 {
-				edges = append(edges, []int{edgeWeight, i, j})
+				edges = append(edges, edge{edgeWeight, i, j})
 			}
 		}
 	}
+	//! O(E log E)
 	sort.Slice(edges, func(i, j int) bool {
-		return edges[i][0] < edges[j][0]
+		return edges[i].weight < edges[j].weight
 	})
 	sum := 0
 	for _, edge := range edges {
-		if uf.AddEdge(edge[1], edge[2]) {
-			sum += edge[0]
+		if uf.AddEdge(edge.from, edge.to) {
+			sum += edge.weight
 		}
 	}
 	return sum
